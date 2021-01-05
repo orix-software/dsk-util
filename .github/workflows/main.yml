@@ -35,8 +35,10 @@ jobs:
           repository: cc65/cc65
           path: cc65
 
+      - run: rm -rf orix-sdk
+
       - name: Checkout orix-sdk
-        if: steps.cache-sdk.outputs.cache-hit != 'true'
+        # if: steps.cache-sdk.outputs.cache-hit != 'true'
         uses: actions/checkout@v2
         with:
           repository: assinie/orix-sdk
