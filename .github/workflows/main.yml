@@ -26,7 +26,7 @@ jobs:
              orix-sdk/**/*
              md2hlp/**/*
              orix-software/**/*
-          key: ${{ runner.os }}-orix-sdk
+          key: ${{ runner.os }}-orix-sdk_
 
       - name: Checkout cc65
         if: steps.cache-sdk.outputs.cache-hit != 'true'
@@ -35,10 +35,8 @@ jobs:
           repository: cc65/cc65
           path: cc65
 
-      - run: rm -rf orix-sdk
-
       - name: Checkout orix-sdk
-        # if: steps.cache-sdk.outputs.cache-hit != 'true'
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
         uses: actions/checkout@v2
         with:
           repository: assinie/orix-sdk
@@ -71,7 +69,7 @@ jobs:
           git checkout
 
       - name: Compile orix-sdk
-        # if: steps.cache-sdk.outputs.cache-hit != 'true'
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
         working-directory: orix-sdk
         run: mkdir -p build/{lib,bin} && CC65_HOME=${GITHUB_WORKSPACE}/cc65 make lib
 
@@ -98,7 +96,7 @@ jobs:
              orix-sdk/**/*
              md2hlp/**/*
              orix-software/**/*
-          key: ${{ runner.os }}-orix-sdk
+          key: ${{ runner.os }}-orix-sdk_
 
       - name: Prepare environment for project
         run: mv cc65 ../ && mv orix-software ../ && mv orix-sdk ../ && mv md2hlp ../
