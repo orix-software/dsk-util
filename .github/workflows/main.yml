@@ -123,8 +123,8 @@ jobs:
     defaults:
       run:
         shell: bash
-    #env:
-    #  hash: ${{ secrets.HASH }}
+    env:
+      hash: ${{ secrets.HASH }}
 
     steps:
       # On peut supprimer le checkout si on met VERSION dans l'artifact
