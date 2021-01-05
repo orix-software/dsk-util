@@ -84,9 +84,18 @@ jobs:
     # The type of runner that the job will run on
     needs: setup-sdk
     runs-on: ubuntu-18.04
+    outputs:
+      version: ${{ steps.job_vars.outputs.VERSION }}
+      repo_name: ${{ steps.job_vars.outputs.REPO_NAME }}
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set job variables
+        id: job_vars
+        run: |
+          echo "::set-output name=VERSION::$(cat VERSION)"
+          echo "::set-output name=REPO_NAME::${GITHUB_REPOSITORY##*/}"
 
       - name: Install sdk
         uses: actions/cache@v2
@@ -110,6 +119,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
+          name: ${{ steps.job_vars.outputs.REPO_NAME }}
           path: |
             build/**/*
             !build/obj/*
@@ -125,11 +135,10 @@ jobs:
         shell: bash
     env:
       hash: ${{ secrets.HASH }}
+      version: ${{ needs.build.outputs.version }}
+      repo_name: ${{ needs.build.outputs.repo_name }}
 
     steps:
-      # On peut supprimer le checkout si on met VERSION dans l'artifact
-      - uses: actions/checkout@v2
-
       - name: Get branch name
         if: github.event_name != 'pull_request'
         run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
@@ -141,14 +150,14 @@ jobs:
        #run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
 
       - name: Get archive name
-        run: echo "ARCHIVE_NAME=${GITHUB_REPOSITORY##*/}.tgz" >> $GITHUB_ENV
+        run: echo "ARCHIVE_NAME=${repo_name}.tgz" >> $GITHUB_ENV
 
       # On pourrait faire l'extraction directement à la racine si VERSION est dans l'artifact
       - name: Download Artifact
         id: download
         uses: actions/download-artifact@v2
         with:
-          name: artifact
+          name: ${{ needs.build.outputs.repo_name }}
           path: artifact
 
       - name: Make archive
@@ -157,6 +166,6 @@ jobs:
 
       - name: Upload to oric
         run: |
-           if [ "$BRANCH_NAME" = "master" -o "$BRANCH_NAME" = "main" ]; then VERSION=`cat VERSION`; else VERSION=alpha ; fi
-           curl -X POST --data-binary "@$ARCHIVE_NAME" "https://cdn.oric.org/publish.php?hash=$hash&path=/home/oricoujr/www/ftp/orix/dists/$VERSION/tgz/6502/$ARCHIVE_NAME"
+           if [ "$BRANCH_NAME" = "master" -o "$BRANCH_NAME" = "main" ]; then VERSION="$version"; else VERSION=alpha ; fi
+           curl -X POST --data-binary "@${ARCHIVE_NAME}" "https://cdn.oric.org/publish.php?hash=$hash&path=/home/oricoujr/www/ftp/orix/dists/$VERSION/tgz/6502/${ARCHIVE_NAME}"
 
