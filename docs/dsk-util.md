@@ -22,5 +22,5 @@
                 Sedoric disk image
 
 ## SOURCE
-https://github.com/assinie/xxx
+https://github.com/orix-software/dsk-util
 
