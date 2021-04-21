@@ -793,9 +793,9 @@ cmnd_help:
 .proc cmnd_man
 	fopen manfile, O_RDONLY
 	sta fp
-	sty fp+1
+	stx fp+1
 
-	ora fp+1
+	eor fp+1
 	beq errFopen
 
 	; Affiche la page man
@@ -1051,9 +1051,9 @@ cmnd_help:
 	; Ouverture du fichier pour la sauvegarde
 	fopen orixfname, O_CREAT | O_WRONLY
 	sta fp
-	sty fp+1
+	stx fp+1
 
-	ora fp+1
+	eor fp+1
 	beq errFopen
 
 	; Entête fichier .tap
@@ -2881,9 +2881,9 @@ printAddress:
  open:
 	fopen dskname, O_RDONLY
 	sta fp
-	sty fp+1
+	stx fp+1
 
-	ora fp+1
+	eor fp+1
 	beq errFopen
 
 	fread BUF_SECTOR, #08, fp
@@ -2943,9 +2943,9 @@ printAddress:
  open:
 	fopen dskname, O_RDONLY
 	sta fp
-	sty fp+1
+	stx fp+1
 
-	ora fp+1
+	eor fp+1
 	beq errFopen
 
 	clc
@@ -2997,9 +2997,9 @@ printAddress:
 
 	fopen dskname, O_RDONLY
 	sta fp
-	sty fp+1
+	stx fp+1
 
-	ora fp+1
+	eor fp+1
 	beq errFopen
 
 	; TODO: Tester le code de retour de fread
