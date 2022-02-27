@@ -799,7 +799,7 @@ cmnd_help:
 	beq errFopen
 
 	; Affiche la page man
-	fread SCREEN, #1120, fp
+	fread SCREEN, #1120, 1, fp
 
 	fclose (fp)
 
@@ -2886,7 +2886,7 @@ printAddress:
 	eor fp+1
 	beq errFopen
 
-	fread BUF_SECTOR, #08, fp
+	fread BUF_SECTOR, #08, 1, fp
 	ldy #$07
  loop:
 	lda BUF_SECTOR,y
@@ -3003,7 +3003,7 @@ printAddress:
 	beq errFopen
 
 	; TODO: Tester le code de retour de fread
-	fread inbuf, #79, fp
+	fread inbuf, #79, 1, fp
 	fclose (fp)
 
 	; Remplace les $0a par des $0d
