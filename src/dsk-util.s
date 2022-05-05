@@ -428,7 +428,7 @@ cmnd_null:
 ;	-
 ;----------------------------------------------------------------------
 cmnd_help:
-        print helpmsg, NOSAVE
+        print helpmsg
         clc
         rts
 
@@ -770,7 +770,7 @@ cmnd_help:
 .proc cmnd_longhelp
 
 	jsr cmnd_help
-	print longhelp_msg, NOSAVE
+	print longhelp_msg
 	clc
 	rts
 .endproc
@@ -825,7 +825,7 @@ cmnd_help:
 	lda #' '
 	BRK_KERNEL XFILLM
 	; Efface le reste de l'écran
-	print #$0c, NOSAVE
+	print #$0c
 
 	; Fin
 	clc
@@ -985,7 +985,7 @@ cmnd_help:
 .proc memcpy
 	bit cmnd_options
 	bpl suite
-	print #'-'
+	print #'-', SAVE
 
   suite:
 	ldy #$00
@@ -1084,7 +1084,7 @@ cmnd_help:
 
 	bit cmnd_options
 	bpl suite
-	print #'='
+	print #'=', SAVE
 
  suite:
 	; Nombre d'octets écrits == 0?
@@ -1501,7 +1501,7 @@ cmnd_help:
 	;sty address
 	;sta address+1
 	jsr printAddress
-	print #' ', NOSAVE
+	print #' '
 
 	; Affiche la taille du fichier
 	ldy BUF_FCB+4
@@ -1511,7 +1511,7 @@ cmnd_help:
 	;sty address
 	;sta address+1
 	jsr printAddress
- 	print #' ', NOSAVE
+	print #' '
 
 	; Calcule l'adresse de fin du fichier
 	clc
@@ -1659,8 +1659,8 @@ loop:
   abort_close:
 	fclose (fp)
 	; TODO: Remonter une erreur ABORT à la place des print
-	print #'^', NOSAVE
-	print #'C', NOSAVE
+	print #'^'
+	print #'C'
 	clc
 
 	rts
@@ -2147,7 +2147,7 @@ loop:
 	;sta address+1
 
 	jsr printAddress
-	print #' ', NOSAVE
+	print #' '
 
 	; Affiche la taille du fichier
 	; (adresse de fin - adresse de début+1)
@@ -2174,7 +2174,7 @@ loop:
 	;sty address
 	;sta address+1
 	jsr printAddress
-	print #' ', NOSAVE
+	print #' '
 
 	; Affiche l'adresse d'exécution
 	;lda address
@@ -2188,7 +2188,7 @@ loop:
 	;sty address
 	;sta address+1
 	jsr printAddress
- 	print #' ', NOSAVE
+	print #' '
 
 ;.ifdef DEBUG
 	BRK_KERNEL XCRLF
@@ -2344,8 +2344,8 @@ loop:
 	fclose (fp)
 
 	; TODO: Remonter une erreur ABORT à la place des print
-	print #'^', NOSAVE
-	print #'C', NOSAVE
+	print #'^'
+	print #'C'
 	clc
 
 	rts
@@ -2769,11 +2769,11 @@ printAddress:
 ; Entrée; AY = adresse (A=MSB, Y=LSB)
 ; /!\ Verifier que PrintHexByte préserve au moins Y
 ;     et que XWR0 conserve A et Y
-	print #' '
+	print #' ', SAVE
 	jsr PrintHexByte
 	tya
 	jsr PrintHexByte
-	print #':'
+	print #':', SAVE
 	rts
 
 ;----------------------------------------------------------------------
@@ -3203,7 +3203,7 @@ printAddress:
 	sta charline,x
 
  suite:
-	print #' '
+	print #' ', SAVE
 	jsr PrintHexByte
 
 	iny
@@ -3214,7 +3214,7 @@ printAddress:
 	; /!\ A modifier si le dump ne commence pas au début d'une page
 	sty address
 
-	print charline, NOSAVE
+	print charline
 
 	; recharge Y car détruit par le print charline, NOSAVE
 	ldy address
@@ -3255,7 +3255,7 @@ out1:
 ;
 ;----------------------------------------------------------------------
 .proc prfild
-	print dskname, NOSAVE
+	print dskname
 	rts
 .endproc
 
@@ -3263,7 +3263,7 @@ out1:
 ;
 ;----------------------------------------------------------------------
 .proc prnamd
-	print dskname, NOSAVE
+	print dskname
 	rts
 .endproc
 
