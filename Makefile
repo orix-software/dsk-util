@@ -1,4 +1,4 @@
-export PROJECT := dsk-util
+export PROJECT := $(notdir $(shell pwd))
 
 all: project docs
 
